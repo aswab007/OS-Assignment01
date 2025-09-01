@@ -9,7 +9,7 @@ int main() {
     pipe(pipe1);
     pipe(pipe2);
 
-    pid_t pid = fork();
+    pid_t pid = fork(); // child
 
     if (pid == 0) {
         close(pipe1[1]);
@@ -39,8 +39,15 @@ int main() {
 
         gettimeofday(&end, NULL);
 
-        close(pipe1[1]);
-        close(pipe2[0]);
+        long sec = end.tv_sec - start.tv_sec;
+        long usec = end.tv_usec - start.tv_usec;
+        double elapsed = sec + usec * 1e-6;
+
+        printf("time = %f\n", elapsed);
+        printf("req/sec = %f\n", 1000000 / elapsed);
+        printf("avg roundtrip = %f\n", (elapsed * 1e6) / 1000000);
+        printf("1forward = %f\n", ((elapsed * 1e6) / 1000000) / 2);
+
         wait(NULL);
     }
 
