@@ -9,7 +9,7 @@ int main() {
     pipe(pipe1);
     pipe(pipe2);
 
-    pid_t pid = fork(); // child
+    pid_t pid = fork();
 
     if (pid == 0) {
         close(pipe1[1]);
@@ -43,11 +43,13 @@ int main() {
         long usec = end.tv_usec - start.tv_usec;
         double elapsed = sec + usec * 1e-6;
 
-        printf("time = %f\n", elapsed);
-        printf("req/sec = %f\n", 1000000 / elapsed);
-        printf("avg roundtrip = %f\n", (elapsed * 1e6) / 1000000);
-        printf("1forward = %f\n", ((elapsed * 1e6) / 1000000) / 2);
+        printf("Total time: %f seconds\n", elapsed);
+        printf("Requests per second: %f\n", 1000000 / elapsed);
+        printf("Average roundtrip time: %f microseconds\n", (elapsed * 1e6) / 1000000);
+        printf("One forwarding delay: %f microseconds\n", ((elapsed * 1e6) / 1000000) / 2);
 
+        close(pipe1[1]);
+        close(pipe2[0]);
         wait(NULL);
     }
 
